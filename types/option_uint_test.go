@@ -19,7 +19,7 @@ package types_test
 import (
 	"testing"
 
-	. "github.com/JFJun/go-substrate-rpc-client/types"
+	. "github.com/JFJun/go-substrate-rpc-client/v3/types"
 )
 
 func TestOptionU8_EncodeDecode(t *testing.T) {

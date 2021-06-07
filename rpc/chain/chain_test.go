@@ -20,8 +20,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/JFJun/go-substrate-rpc-client/client"
-	"github.com/JFJun/go-substrate-rpc-client/config"
+	"github.com/JFJun/go-substrate-rpc-client/v3/client"
+	"github.com/JFJun/go-substrate-rpc-client/v3/config"
 )
 
 var chain *Chain

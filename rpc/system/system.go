@@ -17,7 +17,7 @@
 package system
 
 import (
-	"github.com/JFJun/go-substrate-rpc-client/client"
+	"github.com/JFJun/go-substrate-rpc-client/v3/client"
 )
 
 // System exposes methods for retrieval of system data

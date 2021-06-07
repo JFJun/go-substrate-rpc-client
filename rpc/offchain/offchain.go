@@ -1,6 +1,6 @@
 package offchain
 
-import "github.com/JFJun/go-substrate-rpc-client/client"
+import "github.com/JFJun/go-substrate-rpc-client/v3/client"
 
 // Offchain exposes methods for retrieval of off-chain data
 type Offchain struct {

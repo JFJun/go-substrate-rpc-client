@@ -19,7 +19,7 @@ package xxhash_test
 import (
 	"testing"
 
-	. "github.com/JFJun/go-substrate-rpc-client/xxhash"
+	. "github.com/JFJun/go-substrate-rpc-client/v3/xxhash"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -17,7 +17,7 @@
 package system
 
 import (
-	"github.com/JFJun/go-substrate-rpc-client/types"
+	"github.com/JFJun/go-substrate-rpc-client/v3/types"
 )
 
 // Name retrieves the node name

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/JFJun/go-substrate-rpc-client/scale"
+	"github.com/JFJun/go-substrate-rpc-client/v3/scale"
 	"github.com/stretchr/testify/assert"
 )
 

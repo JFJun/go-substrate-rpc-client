@@ -17,7 +17,7 @@
 package chain
 
 import (
-	"github.com/JFJun/go-substrate-rpc-client/client"
+	"github.com/JFJun/go-substrate-rpc-client/v3/client"
 )
 
 // Chain exposes methods for retrieval of chain data

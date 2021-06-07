@@ -17,13 +17,13 @@
 package rpc
 
 import (
-	"github.com/JFJun/go-substrate-rpc-client/client"
-	"github.com/JFJun/go-substrate-rpc-client/rpc/author"
-	"github.com/JFJun/go-substrate-rpc-client/rpc/chain"
-	"github.com/JFJun/go-substrate-rpc-client/rpc/offchain"
-	"github.com/JFJun/go-substrate-rpc-client/rpc/state"
-	"github.com/JFJun/go-substrate-rpc-client/rpc/system"
-	"github.com/JFJun/go-substrate-rpc-client/types"
+	"github.com/JFJun/go-substrate-rpc-client/v3/client"
+	"github.com/JFJun/go-substrate-rpc-client/v3/rpc/author"
+	"github.com/JFJun/go-substrate-rpc-client/v3/rpc/chain"
+	"github.com/JFJun/go-substrate-rpc-client/v3/rpc/offchain"
+	"github.com/JFJun/go-substrate-rpc-client/v3/rpc/state"
+	"github.com/JFJun/go-substrate-rpc-client/v3/rpc/system"
+	"github.com/JFJun/go-substrate-rpc-client/v3/types"
 )
 
 type RPC struct {

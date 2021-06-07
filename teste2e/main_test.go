@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"testing"
 
-	gsrpc "github.com/JFJun/go-substrate-rpc-client"
-	"github.com/JFJun/go-substrate-rpc-client/config"
-	"github.com/JFJun/go-substrate-rpc-client/types"
+	gsrpc "github.com/JFJun/go-substrate-rpc-client/v3"
+	"github.com/JFJun/go-substrate-rpc-client/v3/config"
+	"github.com/JFJun/go-substrate-rpc-client/v3/types"
 	"github.com/stretchr/testify/assert"
 )
 

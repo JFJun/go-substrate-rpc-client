@@ -16,7 +16,7 @@
 
 package author
 
-import "github.com/JFJun/go-substrate-rpc-client/types"
+import "github.com/JFJun/go-substrate-rpc-client/v3/types"
 
 // SubmitExtrinsic will submit a fully formatted extrinsic for block inclusion
 func (a *Author) SubmitExtrinsic(xt types.Extrinsic) (types.Hash, error) {
