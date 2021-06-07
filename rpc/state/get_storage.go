@@ -17,6 +17,8 @@
 package state
 
 import (
+	"errors"
+	"fmt"
 	"github.com/JFJun/go-substrate-rpc-client/v3/client"
 	"github.com/JFJun/go-substrate-rpc-client/v3/types"
 )
@@ -71,4 +73,65 @@ func (s *State) getStorageRaw(key types.StorageKey, blockHash *types.Hash) (*typ
 
 	data := types.NewStorageDataRaw(bz)
 	return &data, nil
+}
+
+/*
+func: 因为AccountInfo这个结构老是变，所以我在解析这个结构的时候，在这里处理
+author: flynn
+date: 2021-06-07
+*/
+
+func (s *State) GetStorageAccountInfo(key types.StorageKey, blockHash types.Hash) (*types.AccountInfo, error) {
+	raw, err := s.getStorageRaw(key, &blockHash)
+	if err != nil {
+		return nil, err
+	}
+	if len(*raw) == 0 {
+		return nil, errors.New("get storage account info data raw error: raw len is 0")
+	}
+	var accountInfo types.AccountInfo
+	switch len(*raw) {
+	case 80:
+		var aiwtr types.AccountInfoWithTripleRefCount
+		err = types.DecodeFromBytes(*raw, &aiwtr)
+		if err != nil {
+			return nil, err
+		}
+		accountInfo.Nonce = aiwtr.Nonce
+		accountInfo.Consumers = aiwtr.Consumers
+		accountInfo.Providers = aiwtr.Providers
+		accountInfo.Data.Free = aiwtr.Data.Free
+		accountInfo.Data.FreeFrozen = aiwtr.Data.FreeFrozen
+		accountInfo.Data.MiscFrozen = aiwtr.Data.MiscFrozen
+		accountInfo.Data.Reserved = aiwtr.Data.Reserved
+	case 76:
+		var aiwpr types.AccountInfoWithProviders
+		err = types.DecodeFromBytes(*raw, &aiwpr)
+		if err != nil {
+			return nil, err
+		}
+		accountInfo.Nonce = aiwpr.Nonce
+		accountInfo.Consumers = aiwpr.Consumers
+		accountInfo.Providers = aiwpr.Providers
+		accountInfo.Data.Free = aiwpr.Data.Free
+		accountInfo.Data.FreeFrozen = aiwpr.Data.FreeFrozen
+		accountInfo.Data.MiscFrozen = aiwpr.Data.MiscFrozen
+		accountInfo.Data.Reserved = aiwpr.Data.Reserved
+	case 72:
+		var aio types.AccountInfoOld
+		err = types.DecodeFromBytes(*raw, &aio)
+		if err != nil {
+			return nil, err
+		}
+		accountInfo.Nonce = aio.Nonce
+		accountInfo.Consumers = aio.Refcount
+		accountInfo.Providers = 0
+		accountInfo.Data.Free = aio.Data.Free
+		accountInfo.Data.FreeFrozen = aio.Data.FreeFrozen
+		accountInfo.Data.MiscFrozen = aio.Data.MiscFrozen
+		accountInfo.Data.Reserved = aio.Data.Reserved
+	default:
+		return nil, fmt.Errorf("can not parse account info ,raw length is not standard len(80,76,72),len=%d", len(*raw))
+	}
+	return &accountInfo, err
 }

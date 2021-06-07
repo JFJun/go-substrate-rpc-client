@@ -17,8 +17,10 @@
 package gsrpc_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/big"
+	"testing"
 	"time"
 
 	gsrpc "github.com/JFJun/go-substrate-rpc-client/v3"
@@ -488,4 +490,16 @@ func Example_transactionWithEvents() {
 			return
 		}
 	}
+}
+
+func Test_GetStorageAccountInfo(t *testing.T) {
+	c, err := gsrpc.NewSubstrateAPI("wss://rpc.polkadot.io")
+	h, _ := c.RPC.Chain.GetBlockHashLatest()
+	key := "0x26aa394eea5630e07c48ae0c9558cef7b99d880ec681799c0cf30e8886371da9691a70bc348a635a32304160add3d8d4c1c2500ec34d1c987be70eeeb4e0046c73a534e132d8e853b1ff3759d7c7176f"
+	accuntInfo, err := c.RPC.State.GetStorageAccountInfo(types.MustHexDecodeString(key), h)
+	if err != nil {
+		t.Fatal(err)
+	}
+	d, _ := json.Marshal(accuntInfo)
+	fmt.Println(string(d))
 }
