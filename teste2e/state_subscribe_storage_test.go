@@ -21,9 +21,9 @@ import (
 	"testing"
 	"time"
 
-	gsrpc "github.com/centrifuge/go-substrate-rpc-client/v3"
-	"github.com/centrifuge/go-substrate-rpc-client/v3/config"
-	"github.com/centrifuge/go-substrate-rpc-client/v3/types"
+	gsrpc "github.com/JFJun/go-substrate-rpc-client"
+	"github.com/JFJun/go-substrate-rpc-client/config"
+	"github.com/JFJun/go-substrate-rpc-client/types"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -20,9 +20,9 @@ import (
 	"context"
 	"log"
 
-	"github.com/centrifuge/go-substrate-rpc-client/v3/config"
-	gethrpc "github.com/centrifuge/go-substrate-rpc-client/v3/gethrpc"
-	"github.com/centrifuge/go-substrate-rpc-client/v3/types"
+	"github.com/JFJun/go-substrate-rpc-client/config"
+	gethrpc "github.com/JFJun/go-substrate-rpc-client/gethrpc"
+	"github.com/JFJun/go-substrate-rpc-client/types"
 )
 
 type Client interface {

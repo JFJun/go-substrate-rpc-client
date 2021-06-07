@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/centrifuge/go-substrate-rpc-client/v3/scale"
+	"github.com/JFJun/go-substrate-rpc-client/scale"
 )
 
 // Modelled after packages/types/src/Metadata/v8/Metadata.ts

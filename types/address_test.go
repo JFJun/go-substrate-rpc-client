@@ -20,9 +20,9 @@ import (
 	"encoding/binary"
 	"testing"
 
+	"github.com/JFJun/go-substrate-rpc-client/hash"
+	. "github.com/JFJun/go-substrate-rpc-client/types"
 	"github.com/btcsuite/btcutil/base58"
-	"github.com/centrifuge/go-substrate-rpc-client/v3/hash"
-	. "github.com/centrifuge/go-substrate-rpc-client/v3/types"
 	"github.com/stretchr/testify/assert"
 )
 
