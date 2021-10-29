@@ -37,7 +37,8 @@ func (s *State) getMetadata(blockHash *types.Hash) (*types.Metadata, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	// 输出元数据
+	//fmt.Println(res)
 	var metadata types.Metadata
 	err = types.DecodeFromHexString(res, &metadata)
 	return &metadata, err

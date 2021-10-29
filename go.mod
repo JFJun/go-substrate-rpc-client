@@ -2,7 +2,6 @@ module github.com/JFJun/go-substrate-rpc-client/v3
 
 go 1.15
 
-
 require (
 	github.com/ChainSafe/go-schnorrkel v0.0.0-20210318173838-ccb5cd955283 // indirect
 	github.com/btcsuite/btcutil v1.0.2

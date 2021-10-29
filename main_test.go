@@ -17,8 +17,11 @@
 package gsrpc_test
 
 import (
+	"bytes"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/JFJun/go-substrate-rpc-client/v3/scale"
 	"math/big"
 	"testing"
 	"time"
@@ -502,4 +505,26 @@ func Test_GetStorageAccountInfo(t *testing.T) {
 	}
 	d, _ := json.Marshal(accuntInfo)
 	fmt.Println(string(d))
+}
+
+func TestDecode(t *testing.T) {
+	data := "7902"
+	var res types.UCompact
+	err := types.DecodeFromHexString(data, &res)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(res)
+}
+
+func TestEncode(t *testing.T) {
+	s := "Indices"
+	//s:=types.NewUCompact(big.NewInt(130))
+	var buf bytes.Buffer
+	encoder := scale.NewEncoder(&buf)
+	err := encoder.Encode(s)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(hex.EncodeToString(buf.Bytes()))
 }

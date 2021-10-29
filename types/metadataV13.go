@@ -31,10 +31,12 @@ func (m MetadataV13) Encode(encoder scale.Encoder) error {
 
 func (m *MetadataV13) FindCallIndex(call string) (CallIndex, error) {
 	s := strings.Split(call, ".")
+	i := uint8(0)
 	for _, mod := range m.Modules {
 		if !mod.HasCalls {
 			continue
 		}
+		i++
 		if string(mod.Name) != s[0] {
 			continue
 		}
