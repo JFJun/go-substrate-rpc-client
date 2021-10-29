@@ -1,16 +1,21 @@
 package types
 
 import (
+	"encoding/hex"
+	"errors"
 	"fmt"
 	"github.com/JFJun/go-substrate-rpc-client/v3/scale"
 	"hash"
 	"strings"
+	"sync"
 )
 
 type MetadataV14 struct {
-	Lookup    PortableRegistry
-	Pallets   []PalletMetadataV14
-	Extrinsic ExtrinsicMetadataV14
+	Lookup     PortableRegistry
+	ldLk       sync.Mutex
+	LookUpData map[int64]*Si1Type
+	Pallets    []PalletMetadataV14
+	Extrinsic  ExtrinsicMetadataV14
 }
 
 func (d *MetadataV14) FindCallIndex(call string) (CallIndex, error) {
@@ -98,6 +103,14 @@ func (d *MetadataV14) Decode(decoder scale.Decoder) error {
 	if err != nil {
 		return err
 	}
+	// 处理lookUp
+	d.LookUpData = make(map[int64]*Si1Type)
+	d.ldLk.Lock()
+	for _, lookUp := range d.Lookup {
+		d.LookUpData[lookUp.Id.Int64()] = &lookUp.Type
+	}
+	d.ldLk.Unlock()
+
 	err = decoder.Decode(&d.Pallets)
 	if err != nil {
 		return err
@@ -403,4 +416,81 @@ type SignedExtensionMetadataV14 struct {
 	Identifier       Text
 	Type             Si1LookupTypeId
 	AdditionalSigned Si1LookupTypeId
+}
+
+/*
+func: 为了适应bifrost-go这个包而添加以下功能
+author: flynn
+date: 2021/10/29
+*/
+
+type IMetadataFunc interface {
+	getCallIndex(moduleName, fn string) (callIdx string, err error)
+	findNameByCallIndex(callIdx string) (moduleName, fn string, err error)
+	getConstants(modName, constantsName string) (constantsType string, constantsValue []byte, err error)
+}
+
+func (d *MetadataV14) getCallIndex(moduleName, fn string) (string, error) {
+	idx, err := d.FindCallIndex(fmt.Sprintf("%s.%s", moduleName, fn))
+	if err != nil {
+		return "", err
+	}
+	return idx.String(), nil
+
+}
+
+func (d *MetadataV14) findNameByCallIndex(callIdx string) (string, string, error) {
+	if len(callIdx) != 4 {
+		return "", "", fmt.Errorf("call index length is not equal 4: length: %d", len(callIdx))
+	}
+	data, err := hex.DecodeString(callIdx)
+	if err != nil {
+		return "", "", fmt.Errorf("call index is not hex string")
+	}
+	for _, mod := range d.Pallets {
+		if !mod.HasCalls {
+			continue
+		}
+		if uint8(mod.Index) == data[0] {
+			callType := mod.Calls.Type.Int64()
+			d.ldLk.Lock()
+			call := d.LookUpData[callType]
+			if call == nil {
+				return "", "", fmt.Errorf("%s do not have this call id: %d", mod.Name, data[1])
+			}
+			if len(call.Def.Variant.Variants) == 0 {
+				return "", "", fmt.Errorf("%s  call.Def.Variant.Variants len is 0", mod.Name)
+			}
+			for _, vars := range call.Def.Variant.Variants {
+				if uint8(vars.Index) == data[1] {
+					return string(mod.Name), string(vars.Name), nil
+				}
+			}
+			d.ldLk.Unlock()
+		}
+	}
+	return "", "", errors.New("do not find")
+}
+
+func (d *MetadataV14) getConstants(modName, constantsName string) (constantsType string, constantsValue []byte, err error) {
+	for _, mod := range d.Pallets {
+		if string(mod.Name) == modName {
+			for _, constants := range mod.Constants {
+				if string(constants.Name) == constantsName {
+					constantsTypeId := constants.Type.Int64()
+					d.ldLk.Lock()
+					siType := d.LookUpData[constantsTypeId]
+					if siType == nil {
+						return "", nil, fmt.Errorf("%s.%s constants type is nil ptr", mod.Name, constants.Name)
+					}
+					constantsType = siType.Def.Primitive.Value
+					d.ldLk.Unlock()
+					constantsValue = constants.Value
+					return constantsType, constantsValue, nil
+				}
+			}
+		}
+	}
+	return "", nil, fmt.Errorf("do not find this constants,moduleName=%s,"+
+		"constantsName=%s", modName, constantsName)
 }

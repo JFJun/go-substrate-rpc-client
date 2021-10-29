@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/huandu/xstrings"
 	"io"
 	"math/big"
 	"strings"
@@ -281,6 +282,10 @@ func NewCall(m *Metadata, call string, args ...interface{}) (Call, error) {
 type CallIndex struct {
 	SectionIndex uint8
 	MethodIndex  uint8
+}
+
+func (m *CallIndex) String() string {
+	return xstrings.RightJustify(fmt.Sprintf("%x", m.SectionIndex), 2, "0") + xstrings.RightJustify(fmt.Sprintf("%x", m.MethodIndex), 2, "0")
 }
 
 func (m *CallIndex) Decode(decoder scale.Decoder) error {

@@ -169,15 +169,24 @@ func (d *Si1TypeParameter) Decode(decoder scale.Decoder) error {
 }
 
 type Si1TypeDef struct {
-	Composite          Si1TypeDefComposite
-	Variant            Si1TypeDefVariant
-	Sequence           Si1TypeDefSequence
-	Array              Si1TypeDefArray
-	Tuple              Si1TypeDefTuple
-	Primitive          Si1TypeDefPrimitive
-	Compact            Si1TypeDefCompact
-	BitSequence        Si1TypeDefBitSequence
-	HistoricMetaCompat Type
+	IsComposite          bool
+	Composite            Si1TypeDefComposite
+	IsVariant            bool
+	Variant              Si1TypeDefVariant
+	IsSequence           bool
+	Sequence             Si1TypeDefSequence
+	IsArray              bool
+	Array                Si1TypeDefArray
+	IsTuple              bool
+	Tuple                Si1TypeDefTuple
+	IsPrimitive          bool
+	Primitive            Si1TypeDefPrimitive
+	IsCompact            bool
+	Compact              Si1TypeDefCompact
+	IsBitSequence        bool
+	BitSequence          Si1TypeDefBitSequence
+	IsHistoricMetaCompat bool
+	HistoricMetaCompat   Type
 }
 
 func (d *Si1TypeDef) Decode(decoder scale.Decoder) error {
@@ -187,27 +196,40 @@ func (d *Si1TypeDef) Decode(decoder scale.Decoder) error {
 	}
 	switch num {
 	case 0:
+		d.IsComposite = true
 		return decoder.Decode(&d.Composite)
 	case 1:
+		d.IsVariant = true
 		return decoder.Decode(&d.Variant)
 	case 2:
+		d.IsSequence = true
 		return decoder.Decode(&d.Sequence)
 	case 3:
+		d.IsArray = true
 		return decoder.Decode(&d.Array)
 	case 4:
+		d.IsTuple = true
 		return decoder.Decode(&d.Tuple)
 	case 5:
+		d.IsPrimitive = true
 		return decoder.Decode(&d.Primitive)
 	case 6:
+		d.IsCompact = true
 		return decoder.Decode(&d.Compact)
 	case 7:
+		d.IsBitSequence = true
 		return decoder.Decode(&d.BitSequence)
 	case 8:
+		d.IsHistoricMetaCompat = true
 		return decoder.Decode(&d.HistoricMetaCompat)
 
 	default:
 		return fmt.Errorf("Si1TypeDef un know type : %d", num)
 	}
+}
+
+func (d *Si1TypeDef) GetSi1TypeDefData() {
+
 }
 
 type Si1TypeDefComposite struct {

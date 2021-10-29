@@ -24,8 +24,6 @@ import (
 
 const MagicNumber uint32 = 0x6174656d
 
-// Modelled after https://github.com/paritytech/substrate/blob/v1.0.0rc2/srml/metadata/src/lib.rs
-
 type Metadata struct {
 	MagicNumber   uint32
 	Version       uint8
@@ -47,6 +45,35 @@ type Metadata struct {
 	AsMetadataV13 MetadataV13
 	IsMetadataV14 bool
 	AsMetadataV14 MetadataV14
+}
+
+func (m *Metadata) GetCallIndex(moduleName, fn string) (callIdx string, err error) {
+
+	switch m.Version {
+	case 14:
+		callIdx, err = m.AsMetadataV14.getCallIndex(moduleName, fn)
+	default:
+		return "", fmt.Errorf("do not support this version:%d", m.Version)
+	}
+	return callIdx, err
+}
+func (m *Metadata) FindNameByCallIndex(callIdx string) (moduleName, fn string, err error) {
+	switch m.Version {
+	case 14:
+		moduleName, fn, err = m.AsMetadataV14.findNameByCallIndex(callIdx)
+	default:
+		return "", "", fmt.Errorf("do not support this version:%d", m.Version)
+	}
+	return moduleName, fn, err
+}
+func (m *Metadata) GetConstants(modName, constantsName string) (constantsType string, constantsValue []byte, err error) {
+	switch m.Version {
+	case 14:
+		constantsType, constantsValue, err = m.AsMetadataV14.getConstants(modName, constantsName)
+	default:
+		return "", nil, fmt.Errorf("do not support this version:%d", m.Version)
+	}
+	return constantsType, constantsValue, err
 }
 
 func NewMetadataV4() *Metadata {
